@@ -16,12 +16,12 @@
 ## 1. Short description
 <b>SharpStartupTasks</b> is project for	simple management of startup tasks in Asp Net Core. 
 
-<b>Startup task</b> in this context — task running only once at the application startup before app 
+<b>Startup task</b> in this context â€” task running only once at the application startup before app 
 starts processing requests.
 
 There are 2 types of startup tasks:
-- <b>Async (default)</b> — running asynchronously. Related interface: `IStartupTask`.
-- <b>Sync</b> — running synchronously. Related interface: `ISyncStartupTask`.
+- <b>Async (default)</b> â€” running asynchronously. Related interface: `IStartupTask`.
+- <b>Sync</b> â€” running synchronously. Related interface: `ISyncStartupTask`.
 
 <b>Example</b>: [`Examples.ApsNetCoreWebApi`](https://github.com/rdm1234/SharpStartupTasks/tree/master/Examples.AspNetCoreWebApi) with dependent 
 	[`Examples.SeparatedStartupTasks`](https://github.com/rdm1234/SharpStartupTasks/tree/master/Examples.SeparatedStartupTasks) project.
@@ -143,7 +143,7 @@ services.AddStartupTasksFromAssembleyThenOrdered<SomeStartupDependentService>(
     });
 ```
 
-<a name="AddFromAssembleyTypesThenOrderedExcept"> 6. To add tasks from assembley except types and except which are added be added later in strict order:</a>
+<a name="AddFromAssembleyTypesThenOrderedExcept"> 6. To add tasks from assembley except types and except which are added later in strict order:</a>
 ```C#
 services.AddStartupTasksFromAssembleyThenOrdered<SomeStartupDependentService>(
     orderedStartupTasks: new[] { typeof(MustRunAfterAllSeparetedStartupTask) },
