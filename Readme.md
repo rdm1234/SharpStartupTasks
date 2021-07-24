@@ -128,7 +128,7 @@ services.AddStartupTasksFromAssembleyOf<Startup>(
 // Also using typeof(...) for assembley as first param
 ```
 
-<a name="AddFromAssembleyTypesThenOrdered">5. To add tasks from assembley except some which are added be added later in strict order:</a>
+<a name="AddFromAssembleyTypesThenOrdered">5. To add tasks from assembley except some which are added later in strict order:</a>
 ```C#
 services.AddStartupTasksFromAssembleyThenOrdered<SomeStartupDependentService>(
     typeof(MustRunAfterAllSeparetedStartupTask),
