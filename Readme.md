@@ -10,6 +10,7 @@
 <br/>3.4. [Add tasks from assembley except some types](#AddFromAssembleyExceptTypes)
 <br/>3.5. [Add tasks from assembley except some tasks which are added after in strict order](#AddFromAssembleyTypesThenOrdered)
 <br/>3.6. [Add tasks from assembley except some tasks and tasks are added after in strict order](#AddFromAssembleyTypesThenOrderedExcept)
+<br/>3.7. [Add tasks using factory method](#AddUsingFactory)
 4. [Remarks](#Remarks)
 
 <a name="shortDescription"></a> 
@@ -34,19 +35,19 @@ There are 2 types of startup tasks:
 You can get package using NuGet Package Manager in your IDE or through Package Manager Console:
 
 ```
-Install-Package SharpStartupTasks -Version 1.0.3.4
+Install-Package SharpStartupTasks -Version 1.0.4
 ```
 
 Also you can use .NET CLI:
 
 ```
-dotnet add package SharpStartupTasks --version 1.0.3.4
+dotnet add package SharpStartupTasks --version 1.0.4
 ```
 
 Or include package in .csproj:
 
 ```C#
-<PackageReference Include="SharpStartupTasks" Version="1.0.3.4" />
+<PackageReference Include="SharpStartupTasks" Version="1.0.4" />
 ```
 
 <a name="ConfigureProgramCs"></a> 
@@ -143,13 +144,24 @@ services.AddStartupTasksFromAssembleyThenOrdered<SomeStartupDependentService>(
     });
 ```
 
-<a name="AddFromAssembleyTypesThenOrderedExcept"> 6. To add tasks from assembley except types and except which are added later in strict order:</a>
+<a name="AddFromAssembleyTypesThenOrderedExcept">6. To add tasks from assembley except types and except which are added later in strict order:</a>
 ```C#
 services.AddStartupTasksFromAssembleyThenOrdered<SomeStartupDependentService>(
     orderedStartupTasks: new[] { typeof(MustRunAfterAllSeparetedStartupTask) },
     exceptTypes: new[] { typeof(ShouldNotRunForNowSeparetedStartupTask) });
 
 // Also using typeof(...) for assembley as first param
+```
+
+<a name="AddUsingFactory">7. Add tasks using factory method</a>:
+
+```C#
+services.AddStartupTask((sp) =>
+{
+    var dependentService = sp.GetRequiredService<SomeStartupDependentService>();
+    bool param = true;
+    return new FirstFromFactorySeparetedStartupTask(dependentService, param);
+});
 ```
 
 ## 4. Remarks

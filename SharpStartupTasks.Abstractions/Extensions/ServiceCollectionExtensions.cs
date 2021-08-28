@@ -180,6 +180,7 @@ namespace SharpStartupTasks.Extensions
             return services;
         }
 
+        #region Simple add tasks
         // TODO: Decide which to use: IBaseStartupTask or concrete types
         /// <summary>
         /// Add startup task to <paramref name="services"/> as scoped
@@ -214,5 +215,13 @@ namespace SharpStartupTasks.Extensions
         {
             return services.AddScoped(typeof(IBaseStartupTask), taskType);
         }
+        #endregion
+
+        #region Add tasks from factory methods
+        public static IServiceCollection AddStartupTask(this IServiceCollection services, Func<IServiceProvider, IStartupTask> factory)
+        {
+            return services.AddScoped<IBaseStartupTask>(factory);
+        }
+        #endregion
     }
 }

@@ -42,9 +42,15 @@ namespace Examples.AspNetCoreWebApi
                 typeof(MustRunAfterAllStartupTask), 
                 typeof(SecondMustRunAfterAllStartupTask));
 
+            services.AddStartupTask((sp) =>
+            {
+                var dependentService = sp.GetRequiredService<SomeStartupDependentService>();
+                bool param = true;
+                return new FirstFromFactorySeparetedStartupTask(dependentService, param);
+            });
             services.AddStartupTasksFromAssembleyThenOrdered<SomeStartupDependentService>(
                 orderedStartupTasks: new[] { typeof(MustRunAfterAllSeparetedStartupTask) },
-                exceptTypes: new[] { typeof(ShouldNotRunForNowSeparetedStartupTask) });
+                exceptTypes: new[] { typeof(ShouldNotRunForNowSeparetedStartupTask), typeof(FirstFromFactorySeparetedStartupTask) });
 
             services.AddStartupTask<MustRunAfterAllStartupTask>();
             services.AddStartupTask<SecondMustRunAfterAllStartupTask>();
