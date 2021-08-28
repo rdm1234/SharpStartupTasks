@@ -1,8 +1,8 @@
 # SharpStartupTasks
 1. [Short description](#ShortDescription)
 2. [Installation](#Installation)
-<br/>2.1 [Install package](#Installation)
-<br/>2.2 [Configure Program.cs](#ConfigureProgramCs)
+<br/>2.1. [Install package](#Installation)
+<br/>2.2. [Configure Program.cs](#ConfigureProgramCs)
 3. [Documentation](#Documentation)
 <br/>3.1. [Add a single task](#AddSingleTask)
 <br/>3.2. [Add multiple tasks](#AddMultipleTasks)
@@ -34,19 +34,19 @@ There are 2 types of startup tasks:
 You can get package using NuGet Package Manager in your IDE or through Package Manager Console:
 
 ```
-Install-Package SharpStartupTasks -Version 1.0.3.2
+Install-Package SharpStartupTasks -Version 1.0.3.4
 ```
 
 Also you can use .NET CLI:
 
 ```
-dotnet add package SharpStartupTasks --version 1.0.3.2
+dotnet add package SharpStartupTasks --version 1.0.3.4
 ```
 
 Or include package in .csproj:
 
 ```C#
-<PackageReference Include="SharpStartupTasks" Version="1.0.3.2" />
+<PackageReference Include="SharpStartupTasks" Version="1.0.3.4" />
 ```
 
 <a name="ConfigureProgramCs"></a> 
