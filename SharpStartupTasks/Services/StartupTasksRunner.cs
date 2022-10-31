@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SharpStartupTasks.Abstractions;
 using SharpStartupTasks.Abstractions.Attributes;
 using SharpStartupTasks.Abstractions.Configuration;
 using System;
@@ -33,7 +34,6 @@ namespace SharpStartupTasks.Services
         {
             _logger?.LogDebug("Running startup tasks");
 
-
             var currentEnv = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
             foreach (var st in _startupTasks)
@@ -41,10 +41,32 @@ namespace SharpStartupTasks.Services
                 var cfg = _configurationProvider.Get(st);
 
                 if (cfg.Disabled!.Value)
+                {
+                    if (st is AnonymousStartupTaskBase anonymousTask)
+                    {
+                        _logger?.LogInformation("Skipping task of type '{TypeName}' with id '{AnonymousTaskId}' because it is disabled", st.GetType().FullName, anonymousTask.Id);
+                    }
+                    else
+                    {
+                        _logger?.LogInformation("Skipping task of type '{TypeName}' because it is disabled", st.GetType().FullName);
+                    }
+
                     continue;
+                }
 
                 if (cfg.EnabledEnvironments != null && !cfg.EnabledEnvironments.Contains(currentEnv, StringComparer.OrdinalIgnoreCase))
+                {
+                    if (st is AnonymousStartupTaskBase anonymousTask)
+                    {
+                        _logger?.LogInformation("Skipping task of type '{TypeName}' with id '{AnonymousTaskId}' because it is not in enabled environments list (current env: {Environment})", st.GetType().FullName, anonymousTask.Id, currentEnv);
+                    }
+                    else
+                    {
+                        _logger?.LogInformation("Skipping task of type '{TypeName}' because it is not in enabled environments list (current env: {Environment})", st.GetType().FullName, currentEnv);
+                    }
+
                     continue;
+                }
 
                 var ignoreExceptionPredicate = GetIgnoreExceptionPredicate(cfg.IgnoreAllExceptions!.Value, cfg.IgnoreExceptions, cfg.IgnoreExceptionTypes);
 
@@ -56,11 +78,17 @@ namespace SharpStartupTasks.Services
                 {
                     if (!ignoreExceptionPredicate(e))
                     {
-                        _logger?.LogCritical(e, "Exception during execution startup task of type '{TypeName}'", st.GetType());
+                        if (st is AnonymousStartupTaskBase at)
+                            _logger?.LogCritical(e, "Exception during execution startup task of type '{TypeName}'. Task id: {AnonymousTaskId}", st.GetType(), at.Id);
+                        else
+                            _logger?.LogCritical(e, "Exception during execution startup task of type '{TypeName}'", st.GetType());
                         throw;
                     }
 
-                    _logger?.LogError(e, "Exception during execution startup task of type '{TypeName}'. Ignoring it.", st.GetType());
+                    if (st is AnonymousStartupTaskBase at1)
+                        _logger?.LogCritical(e, "Exception during execution startup task of type '{TypeName}'. Task id: {AnonymousTaskId}. Ignoring it.", st.GetType(), at1.Id);
+                    else
+                        _logger?.LogError(e, "Exception during execution startup task of type '{TypeName}'. Ignoring it.", st.GetType());
                 }
             }
         }
@@ -69,13 +97,19 @@ namespace SharpStartupTasks.Services
         {
             if (startupTask is IStartupTask asyncStartupTask)
             {
-                _logger?.LogInformation("Executing async startup task of type '{TypeName}'", startupTask.GetType().FullName);
+                if (startupTask is AnonymousStartupTaskBase anonymousTask)
+                    _logger?.LogInformation("Executing async startup task of type '{TypeName}'. Task id: {AnonymousTaskId}", startupTask.GetType().FullName, anonymousTask.Id); 
+                else
+                    _logger?.LogInformation("Executing async startup task of type '{TypeName}'", startupTask.GetType().FullName);
 
                 await asyncStartupTask.ExecuteAsync(cancellationToken);
             }
             else
             {
-                _logger?.LogInformation("Executing sync startup task of type '{TypeName}'", startupTask.GetType().FullName);
+                if (startupTask is AnonymousStartupTaskBase anonymousTask)
+                    _logger?.LogInformation("Executing sync startup task of type '{TypeName}' Task id: {AnonymousTaskId}", startupTask.GetType().FullName, anonymousTask.Id);
+                else
+                    _logger?.LogInformation("Executing sync startup task of type '{TypeName}'", startupTask.GetType().FullName);
 
                 ((ISyncStartupTask)startupTask).Execute(cancellationToken);
             }

@@ -32,16 +32,16 @@ SharpStartupTasks
 - [5. Remarks](#5-remarks)
 
 # 1 Short description
-<b>SharpStartupTasks</b> is project for	simple management of startup tasks in Asp Net Core. 
+**SharpStartupTasks** is project for simple management of startup tasks in Asp Net Core. 
 
-<b>Startup task</b> in this context — task running only once at the application startup before app 
+**Startup task** in this context — task running only once at the application startup before app 
 starts processing requests.
 
 There are 2 types of startup tasks:
-- <b>Async (default)</b> — running asynchronously. Related interface: `IStartupTask`.
-- <b>Sync</b> — running synchronously. Related interface: `ISyncStartupTask`.
+- **Async (default)** — running asynchronously. Related interface: `IStartupTask`.
+- **Sync** — running synchronously. Related interface: `ISyncStartupTask`.
 
-<b>Example</b>: [`Examples.ApsNetCoreWebApi`](https://github.com/rdm1234/SharpStartupTasks/tree/master/Examples.AspNetCoreWebApi) with dependent 
+**Example**: [`Examples.ApsNetCoreWebApi`](https://github.com/rdm1234/SharpStartupTasks/tree/master/Examples.AspNetCoreWebApi) with dependent 
 	[`Examples.SeparatedStartupTasks`](https://github.com/rdm1234/SharpStartupTasks/tree/master/Examples.SeparatedStartupTasks) project.
  
 # 2 Installation
